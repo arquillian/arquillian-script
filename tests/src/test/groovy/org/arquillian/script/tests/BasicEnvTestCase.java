@@ -13,26 +13,54 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.arquillian.script.api.ArquillianEnvironment;
+import org.arquillian.script.api.Container;
 import org.arquillian.script.impl.ScriptRunner;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class BasicEnvTestCase {
 
     @Test
-    public void testSimpleSet() throws Exception {
+    public void shouldBeAbleToSetName() throws Exception {
         ArquillianEnvironment env = run("arquillian.name = 'a'");
         Assert.assertEquals("a", env.name);
     }
     
     @Test
-    public void testClosureSet() throws Exception {
+    public void shouldBeAbleToAddEnvironment() throws Exception {
         ArquillianEnvironment env = run(
-                "arquillian.name 'a' \n" +
-                "arquillian.environment { name 'b'}");
+                "arquillian.environment { }");
 
-        Assert.assertEquals("a", env.name);
-        Assert.assertEquals("b", env.environments.iterator().next().name);
+        Assert.assertEquals(1, env.environments.size());
+    }
+
+    @Test
+    public void shouldBeAbleToAddNamedContainer() throws Exception {
+        ArquillianEnvironment env = run(
+                "arquillian.environment {\n " +
+                "  container 'test', { \n" +
+                "  }" +
+                "}");
+
+        Assert.assertEquals(1, env.environments.size());
+        Assert.assertEquals(1, env.environments.iterator().next().containers.size());
+        Container container = env.environments.iterator().next().containers.iterator().next();
+        Assert.assertEquals("test", container.name);
+    }
+
+    @Test
+    public void shouldBeAbleToAddMultipleContainers() throws Exception {
+        ArquillianEnvironment env = run(
+                "arquillian.environment {\n " +
+                "  container 'test-1', { \n" +
+                "  }\n" +
+                "  container 'test-2', { \n" +
+                "  }" +
+                "}");
+
+        Assert.assertEquals(1, env.environments.size());
+        Assert.assertEquals(2, env.environments.iterator().next().containers.size());
     }
 
     private ArquillianEnvironment run(String script) throws Exception {

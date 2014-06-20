@@ -1,10 +1,19 @@
 package org.arquillian.script.api;
 
+import groovy.lang.Closure;
+
+import java.util.HashSet;
+import java.util.Set;
+
 public class Environment {
 
-    public String name;
+    public Set<Container> containers = new HashSet<>();
 
-    public void name(String name) {
-        this.name = name;
+    public void container(String name, Closure<Container> cl) {
+        Container container = new Container();
+        container.name = name;
+        cl.setDelegate(container);
+        cl.call();
+        containers.add(container);
     }
 }
