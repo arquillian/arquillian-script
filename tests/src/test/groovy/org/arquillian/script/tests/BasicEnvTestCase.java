@@ -20,11 +20,21 @@ import org.junit.Test;
 public class BasicEnvTestCase {
 
     @Test
-    public void test() throws Exception {
+    public void testSimpleSet() throws Exception {
         ArquillianEnvironment env = run("arquillian.name = 'a'");
         Assert.assertEquals("a", env.name);
     }
     
+    @Test
+    public void testClosureSet() throws Exception {
+        ArquillianEnvironment env = run(
+                "arquillian.name 'a' \n" +
+                "arquillian.environment { name 'b'}");
+
+        Assert.assertEquals("a", env.name);
+        Assert.assertEquals("b", env.environments.iterator().next().name);
+    }
+
     private ArquillianEnvironment run(String script) throws Exception {
         Map<String, String> scripts = new HashMap<>();
         scripts.put("test-1", script);
