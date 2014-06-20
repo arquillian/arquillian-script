@@ -22,4 +22,10 @@ public class ArquillianEnvironment {
         cl.call();
         this.environments.add(environment);
     }
+
+    @Override
+    public String toString() {
+        return "ArquillianEnvironment [name=" + name + ", environments="
+                + environments + "]";
+    }
 }

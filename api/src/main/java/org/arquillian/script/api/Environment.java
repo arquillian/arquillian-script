@@ -16,4 +16,9 @@ public class Environment {
         cl.call();
         containers.add(container);
     }
+
+    @Override
+    public String toString() {
+        return "Environment [containers=" + containers + "]";
+    }
 }

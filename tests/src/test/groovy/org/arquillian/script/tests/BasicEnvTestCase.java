@@ -16,7 +16,6 @@ import org.arquillian.script.api.ArquillianEnvironment;
 import org.arquillian.script.api.Container;
 import org.arquillian.script.impl.ScriptRunner;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class BasicEnvTestCase {
@@ -38,9 +37,9 @@ public class BasicEnvTestCase {
     @Test
     public void shouldBeAbleToAddNamedContainer() throws Exception {
         ArquillianEnvironment env = run(
-                "arquillian.environment {\n " +
+                "arquillian.environment {\n" +
                 "  container 'test', { \n" +
-                "  }" +
+                "  }\n" +
                 "}");
 
         Assert.assertEquals(1, env.environments.size());
@@ -52,11 +51,24 @@ public class BasicEnvTestCase {
     @Test
     public void shouldBeAbleToAddMultipleContainers() throws Exception {
         ArquillianEnvironment env = run(
-                "arquillian.environment {\n " +
+                "arquillian.environment {\n" +
                 "  container 'test-1', { \n" +
                 "  }\n" +
                 "  container 'test-2', { \n" +
-                "  }" +
+                "  }\n" +
+                "}");
+
+        Assert.assertEquals(1, env.environments.size());
+        Assert.assertEquals(2, env.environments.iterator().next().containers.size());
+    }
+
+    @Test
+    public void shouldBeAbleToAddMultipleDynamicContainers() throws Exception {
+        ArquillianEnvironment env = run(
+                "arquillian.environment {\n" +
+                "  ['test-1', 'test-2'].each { \n" +
+                "     container it, {}\n" +
+                "  }\n" +
                 "}");
 
         Assert.assertEquals(1, env.environments.size());
@@ -64,11 +76,19 @@ public class BasicEnvTestCase {
     }
 
     private ArquillianEnvironment run(String script) throws Exception {
+
+        System.out.println("---------------");
+        System.out.println(script);
+        System.out.println("===============");
         Map<String, String> scripts = new HashMap<>();
         scripts.put("test-1", script);
         
         ScriptRunner runner = new ScriptRunner(new StringResourceConnector(scripts));
-        return runner.run("test-1");
+
+        ArquillianEnvironment env = runner.run("test-1");
+        System.out.println(env);
+        System.out.println("---------------\n");
+        return env;
     }
     
     private static class StringResourceConnector implements ResourceConnector {
