@@ -13,7 +13,8 @@ public class Environment {
         Container container = new Container();
         container.name = name;
         cl.setDelegate(container);
-        cl.call();
+        cl.setDirective(Closure.DELEGATE_FIRST);
+        cl.call(container);
         containers.add(container);
     }
 

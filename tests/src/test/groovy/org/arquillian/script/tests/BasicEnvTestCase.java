@@ -35,10 +35,11 @@ public class BasicEnvTestCase {
     }
 
     @Test
-    public void shouldBeAbleToAddNamedContainer() throws Exception {
+    public void shouldBeAbleToAddNamedAndTypeViaItToContainer() throws Exception {
         ArquillianEnvironment env = run(
                 "arquillian.environment {\n" +
-                "  container 'test', { \n" +
+                "  container('test') { \n" +
+                "    it.type = 'c'\n" +
                 "  }\n" +
                 "}");
 
@@ -46,6 +47,23 @@ public class BasicEnvTestCase {
         Assert.assertEquals(1, env.environments.iterator().next().containers.size());
         Container container = env.environments.iterator().next().containers.iterator().next();
         Assert.assertEquals("test", container.name);
+        Assert.assertEquals("c", container.type);
+    }
+
+    @Test
+    public void shouldBeAbleToAddNamedAndTypeViaNamedTypeToContainer() throws Exception {
+        ArquillianEnvironment env = run(
+                "arquillian.environment {\n" +
+                "  container('test') { c-> \n" +
+                "    c.type = 'c'\n" +
+                "  }\n" +
+                "}");
+
+        Assert.assertEquals(1, env.environments.size());
+        Assert.assertEquals(1, env.environments.iterator().next().containers.size());
+        Container container = env.environments.iterator().next().containers.iterator().next();
+        Assert.assertEquals("test", container.name);
+        Assert.assertEquals("c", container.type);
     }
 
     @Test
@@ -65,9 +83,12 @@ public class BasicEnvTestCase {
     @Test
     public void shouldBeAbleToAddMultipleDynamicContainers() throws Exception {
         ArquillianEnvironment env = run(
+                "containers = ['test-1', 'test-2']\n" +
                 "arquillian.environment {\n" +
-                "  ['test-1', 'test-2'].each { \n" +
-                "     container it, {}\n" +
+                "  containers.each { name -> \n" +
+                "     container(name) { c -> \n" +
+                "       c.type = 'Remote' \n" +
+                "     }\n" +
                 "  }\n" +
                 "}");
 

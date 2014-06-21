@@ -19,7 +19,7 @@ public class ArquillianEnvironment {
         Environment environment = new Environment();
         cl.setDelegate(environment);
         cl.setDirective(Closure.DELEGATE_ONLY);
-        cl.call();
+        cl.call(environment);
         this.environments.add(environment);
     }
 
