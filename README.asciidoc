@@ -1,0 +1,37 @@
+arquillian-script
+=================
+
+Arquillian Groovy Script front end - GSoC
+
+Possible target DSL:
+[source, groovy]
+----
+arquillian {
+   
+   environment {
+      
+      container WildFly {
+         type "Remote"
+      }
+   
+      deployment RestFrontEnd {
+         source "File|Archive|URL"
+      }
+   
+      tests RestTests << packages(org.test)
+   }
+   
+   scenario {
+      
+      WildFly.start
+      
+      WildFly.deploy RestFrontEnd {
+         include RestTests
+      }
+      RestTests*.run
+      
+      WildFly.stop
+   }
+}
+----
+
