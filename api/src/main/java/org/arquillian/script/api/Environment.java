@@ -1,6 +1,7 @@
 package org.arquillian.script.api;
 
 import groovy.lang.Closure;
+import groovy.lang.DelegatesTo;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,7 +10,7 @@ public class Environment {
 
     public Set<Container> containers = new HashSet<>();
 
-    public void container(String name, Closure<Container> cl) {
+    public void container(String name, @DelegatesTo(Container.class) Closure<Container> cl) {
         Container container = new Container();
         container.setName(name);
         cl.setDelegate(container);

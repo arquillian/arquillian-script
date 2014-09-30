@@ -1,6 +1,7 @@
 package org.arquillian.script.api;
 
 import groovy.lang.Closure;
+import groovy.lang.DelegatesTo;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +13,7 @@ public abstract class ArquillianEnvironment extends groovy.lang.Script {
     private Scenario scenario;
     private Closure<Scenario> scenarioClosure;
     
-    public void environment(Closure<Environment> cl) {
+    public void environment(@DelegatesTo(Environment.class) Closure<Environment> cl) {
         Environment environment = new Environment();
         cl.setDelegate(environment);
         cl.setDirective(Closure.DELEGATE_FIRST);
@@ -20,10 +21,10 @@ public abstract class ArquillianEnvironment extends groovy.lang.Script {
         this.environments.add(environment);
     }
 
-    public void scenario(Closure<Scenario> cl) {
+    public void scenario(@DelegatesTo(Scenario.class) Closure<Scenario> cl) {
         Scenario scenario = new Scenario(this.environments.iterator().next());
         cl.setDelegate(scenario);
-        cl.setDirective(Closure.DELEGATE_ONLY);
+        cl.setDirective(Closure.DELEGATE_FIRST);
         this.scenarioClosure = cl;
         this.scenario = scenario;
     }
