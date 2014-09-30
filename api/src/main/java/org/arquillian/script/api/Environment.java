@@ -11,7 +11,7 @@ public class Environment {
 
     public void container(String name, Closure<Container> cl) {
         Container container = new Container();
-        container.name = name;
+        container.setName(name);
         cl.setDelegate(container);
         cl.setDirective(Closure.DELEGATE_FIRST);
         cl.call(container);

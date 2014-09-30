@@ -1,15 +1,16 @@
 package org.arquillian.script.impl;
 
-import groovy.lang.Binding;
-import groovy.util.GroovyScriptEngine;
+import groovy.lang.GroovyShell;
 import groovy.util.ResourceConnector;
 import groovy.util.ResourceException;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 import org.arquillian.script.api.ArquillianEnvironment;
+import org.codehaus.groovy.control.CompilerConfiguration;
 
 public class ScriptRunner {
 
@@ -20,14 +21,26 @@ public class ScriptRunner {
     }
 
     public ArquillianEnvironment run(String script) throws Exception {
-        GroovyScriptEngine gse = new GroovyScriptEngine(connector);
+        CompilerConfiguration config = new CompilerConfiguration();
+        config.setScriptBaseClass(ArquillianEnvironment.class.getName());
+        GroovyShell shell = new GroovyShell(config);
+        
+//        GroovyScriptEngine gse = new GroovyScriptEngine(connector);
+//        System.out.println(ArquillianEnvironment.class.getName());
+//        gse.getConfig().setScriptBaseClass(ArquillianEnvironment.class.getName());
 
-        ArquillianEnvironment env = new ArquillianEnvironment();
+        return (ArquillianEnvironment)shell.run(script, "arquillian", new ArrayList<String>());
+        
+//        Binding b = new Binding();
+//        return (ArquillianEnvironment)gse.run(script, b);
+    }
 
-        Binding binding = new Binding();
-        binding.setVariable("arquillian", env);
-        gse.run(script, binding);
-
+    public ArquillianEnvironment runScript(String script) throws Exception {
+        CompilerConfiguration config = new CompilerConfiguration();
+        config.setScriptBaseClass(ArquillianEnvironment.class.getName());
+        GroovyShell shell = new GroovyShell(config);
+        ArquillianEnvironment env = (ArquillianEnvironment)shell.parse(script);
+        env.run();
         return env;
     }
 
