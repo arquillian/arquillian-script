@@ -21,6 +21,10 @@ public class Container {
     public void setType(String type) {
         this.type = type;
     }
+
+    public void type(String type) {
+        this.type = type;
+    }
         
     @Override
     public String toString() {

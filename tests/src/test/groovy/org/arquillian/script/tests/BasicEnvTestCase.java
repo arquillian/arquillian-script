@@ -33,7 +33,7 @@ public class BasicEnvTestCase {
         ArquillianEnvironment env = run(
                 "environment {\n" +
                 "  container('test') { \n" +
-                "    it.type = 'c'\n" +
+                "    type 'c'\n" +
                 "  }\n" +
                 "}");
 
@@ -48,8 +48,8 @@ public class BasicEnvTestCase {
     public void shouldBeAbleToAddNamedAndTypeViaNamedTypeToContainer() throws Exception {
         ArquillianEnvironment env = run(
                 "environment {\n" +
-                "  container('test') { c-> \n" +
-                "    c.type = 'c'\n" +
+                "  container('test') { \n" +
+                "    type 'c'\n" +
                 "  }\n" +
                 "}");
 
@@ -79,9 +79,9 @@ public class BasicEnvTestCase {
         ArquillianEnvironment env = run(
                 "containers = ['test-1', 'test-2']\n" +
                 "environment {\n" +
-                "  containers.each { name -> \n" +
-                "     container(name) { c -> \n" +
-                "       c.type = 'Remote' \n" +
+                "  containers.each { \n" +
+                "     container(it) { \n" +
+                "       type 'Remote' \n" +
                 "     }\n" +
                 "  }\n" +
                 "}");
@@ -91,15 +91,15 @@ public class BasicEnvTestCase {
     }
     
     @Test
-    public void shouldBeAbleToLookupContainerInScneraioBasedOnName() throws Exception {
+    public void shouldBeAbleToLookupContainerInScenariooBasedOnName() throws Exception {
         ArquillianEnvironment env = run(
                 "environment {\n" +
-                "  container('test') { c-> \n" +
-                "    c.type = 'c'\n" +
+                "  container('test') {  \n" +
+                "    type 'c'\n" +
                 "  }\n" +
                 "} \n" +
-                "scenario { s -> \n" + 
-                "  s.test.start() \n" +
+                "scenario { \n" +
+                "  test.start() \n" +
                 "}");
         
         env.runScenario();
