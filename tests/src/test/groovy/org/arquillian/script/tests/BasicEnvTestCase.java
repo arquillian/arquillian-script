@@ -89,9 +89,24 @@ public class BasicEnvTestCase {
         Assert.assertEquals(1, env.environments.size());
         Assert.assertEquals(2, env.environments.iterator().next().containers.size());
     }
-    
+
     @Test
-    public void shouldBeAbleToLookupContainerInScenariooBasedOnName() throws Exception {
+    public void shouldBeAbleToAddMultipleDeployments() throws Exception {
+        ArquillianEnvironment env = run("" +
+                "environment {\n" +
+                "  deployment 'RestFrontend', {\n" +
+                "    source '/home/user/archive.war'\n" +
+                "  }\n" +
+                "  deployment 'ForgeAddon', {\n" +
+                "    source = 'http://forge.jboss.org'\n" +
+                "  }\n" +
+                "}");
+        Assert.assertEquals(1, env.environments.size());
+        Assert.assertEquals(2, env.environments.iterator().next().deployments.size());
+    }
+
+    @Test
+    public void shouldBeAbleToLookupContainerInScenarioBasedOnName() throws Exception {
         ArquillianEnvironment env = run(
                 "environment {\n" +
                 "  container('test') {  \n" +
@@ -102,6 +117,24 @@ public class BasicEnvTestCase {
                 "  test.start() \n" +
                 "}");
         
+        env.runScenario();
+    }
+
+    @Test
+    public void shouldBeAbleToLookupDeploymentInScenarioBasedOnName() throws Exception {
+        ArquillianEnvironment env = run(
+                "environment {\n" +
+                "  container 'test', { \n" +
+                "    type = 'c'\n" +
+                "  }\n" +
+                "  deployment 'RestFrontend', {\n" +
+                "    source '/home/user/archive.war'\n" +
+                "  }\n" +
+                "} \n" +
+                "scenario { \n" +
+                "  test.deploy RestFrontend \n" +
+                "}");
+
         env.runScenario();
     }
 

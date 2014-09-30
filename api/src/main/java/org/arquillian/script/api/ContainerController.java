@@ -16,11 +16,11 @@ public class ContainerController {
         System.out.println("Stopping.. " + container.getName());
     }
     
-    public void deploy(String deployment) {
-        System.out.println("Deploying.. " + deployment);
+    public void deploy(Deployment deployment) {
+        System.out.println("Deploying.. " + deployment.getName());
     }
 
-    public void undeploy(String deployment) {
-        System.out.println("Undeploying.. " + deployment);
+    public void undeploy(Deployment deployment) {
+        System.out.println("Undeploying.. " + deployment.getName());
     }
 }

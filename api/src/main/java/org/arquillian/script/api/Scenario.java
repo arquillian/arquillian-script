@@ -13,16 +13,17 @@ public class Scenario {
         if(container != null) {
             return new ContainerController(container);
         }
-        return null;
+
+        return findDeployment(name);
     }
-    
+
     public Object propertyMissing(String name) {
         System.out.println("Get Property " + name);
         Container container = findContainer(name);
         if(container != null) {
             return new ContainerController(container);
         }
-        return null;
+        return findDeployment(name);
     }
     
     public void propertyMissing(String name, Object value) {
@@ -33,6 +34,15 @@ public class Scenario {
         for(Container container : environment.containers) {
             if(name.equalsIgnoreCase(container.getName())) {
                 return container;
+            }
+        }
+        return null;
+    }
+
+    private Deployment findDeployment(String name) {
+        for (Deployment deployment : environment.deployments) {
+            if (name.equalsIgnoreCase(deployment.getName())) {
+                return deployment;
             }
         }
         return null;
